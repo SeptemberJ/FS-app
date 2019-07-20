@@ -1,0 +1,85 @@
+{
+	"pages": [
+		{
+			"path": "pages/module/index",
+			"style": {
+				"navigationBarTitleText": "菜单",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/receiveManagement/list/index",
+			"style": {
+				"navigationBarTitleText": "收料管理",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/receiveManagement/detail/index",
+			"style": {
+				"navigationBarTitleText": "收料详情",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/inspectionManagement/list/index",
+			"style": {
+				"navigationBarTitleText": "检验管理",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/inspectionManagement/project/index",
+			"style": {
+				"navigationBarTitleText": "项目详情",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/inspectionManagement/serialNumber/index",
+			"style": {
+				"navigationBarTitleText": "序列号详情",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/inspectionManagement/detail/index",
+			"style": {
+				"navigationBarTitleText": "检验详情",
+				"navigationBarBackgroundColor": "#387DB3",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登陆",
+				// "navigationBarBackgroundColor": "#387DB5",
+				"navigationBarTextStyle": "white"
+				// "navigationStyle": "custom"
+			}
+		}
+	],
+	"subPackages": [],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "复盛",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF",
+		"mp-alipay": {
+			"titleBarColor": "#FFFFFF"
+		}
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#387DB3" // #79B2D8
+		}
+}
