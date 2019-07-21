@@ -18,6 +18,10 @@
 </template>
 
 <script>
+	import {
+	    mapState,
+	    mapActions
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -25,6 +29,11 @@
 		},
 		onLoad() {
 
+		},
+		computed: {
+			...mapState({
+			  userInfo: state => state.userInfo
+			})
 		},
 		methods: {
 			GoMuduleR () {

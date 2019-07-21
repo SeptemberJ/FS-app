@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/module/index",
+    "pages/receiveManagement/list/index",
+    "pages/receiveManagement/detail/index",
+    "pages/inspectionManagement/list/index",
+    "pages/inspectionManagement/project/index",
+    "pages/inspectionManagement/serialNumber/index",
+    "pages/inspectionManagement/detail/index"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "复盛",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
+    "borderStyle": "black",
+    "backgroundColor": "#387DB3"
+  },
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": false
+  },
+  "appname": "FS",
+  "compilerVersion": "1.9.4",
+  "usingComponents": {
+    "page-head": "/components/page-head",
+    "page-foot": "/components/page-foot"
+  }
+}

@@ -1,6 +1,15 @@
 {
 	"pages": [
 		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登陆",
+				// "navigationBarBackgroundColor": "#387DB5",
+				"navigationBarTextStyle": "white"
+				// "navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/module/index",
 			"style": {
 				"navigationBarTitleText": "菜单",
@@ -54,15 +63,6 @@
 				"navigationBarTitleText": "检验详情",
 				"navigationBarBackgroundColor": "#387DB3",
 				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationBarTitleText": "登陆",
-				// "navigationBarBackgroundColor": "#387DB5",
-				"navigationBarTextStyle": "white"
-				// "navigationStyle": "custom"
 			}
 		}
 	],

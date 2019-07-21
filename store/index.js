@@ -5,11 +5,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
+		urlPre: 'http://117.131.44.2:8082/fushengJK',
+		userInfo: '',
 		hasLogin: false,
 		loginProvider: "",
 		openid: null
 	},
 	mutations: {
+		setUserInfo(state, Info) {
+			state.userInfo = Info
+			// state.userRole = Info.userRole
+			// state.userName = Info.userName
+			// state.purchaseUnit = Info.purchaseUnit
+		},
 		login(state, provider) {
 			state.hasLogin = true;
 			state.loginProvider = provider;
@@ -23,6 +31,9 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
+		updateUserInfo : function ({commit, state}, Info) {
+			commit('setUserInfo', Info)
+		},
 		// lazy loading openid
 		getUserOpenId: async function ({
 			commit,

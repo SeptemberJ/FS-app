@@ -1,12 +1,12 @@
 <template>
 	<view class="List">
-		<view style="position: fixed;top: 40upx;left: 0;">
+		<view style="position: fixed;top: 44px;left: 0;z-index: 999;">
 			<view class="TopSearchBar">
 				<text>单号</text>
-				<input class="uni-input" v-model="orderNo"/>
+				<input class="uni-input" v-model="checkno"/>
 				<text>供应商</text>
 				<input class="uni-input" v-model="supplier"/>
-				<view type="default" class="searchBt">查 询</view>
+				<view type="default" class="searchBt" @click="getList">查 询</view>
 			</view>
 			<view class="ListColumn">
 				<text>检验单号</text>
@@ -18,11 +18,11 @@
 		<view class="ListBlock">
 			<view class="ListMain">
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
-				<view class="ListItem" v-for="(item, idx) in listData" :key="idx" @click="GoDetail">
-					<text>{{item.orderNo}}</text>
-					<text>{{item.date}}</text>
-					<text>{{item.supplier}}</text>
-					<text>{{item.status}}</text>
+				<view class="ListItem" v-for="(item, idx) in listData" :key="idx" @click="GoDetail(item)">
+					<text>{{item.checkno}}</text>
+					<text>{{item.dateTxt}}</text>
+					<text>{{item.providername}}</text>
+					<text>{{item.providername}}</text>
 				</view>
 			</view>
 		</view>
@@ -30,11 +30,17 @@
 </template>
 
 <script>
+	import {
+	    mapState
+	} from 'vuex'
 	export default {
 		data() {
 			return {
-				orderNo: '',
+				checkno: '',
 				supplier: '',
+				curPage: 1,
+				pageSize: 10,
+				total: 0,
 				listData: [
 					{
 						orderNo: 'SH1907200001',
@@ -51,14 +57,101 @@
 				]
 			}
 		},
+		computed: {
+			...mapState({
+			  urlPre: state => state.urlPre
+			})
+		},
 		onLoad() {
 
 		},
+		onShow: function() {
+			this.getList()
+		},
 		methods: {
-			GoDetail () {
+			GoDetail (Info) {
 				uni.navigateTo({
-					url: '/pages/inspectionManagement/detail/index' 
+					url: '/pages/inspectionManagement/detail/index?Info=' + JSON.stringify(Info)
 				})
+			},
+			getList () {
+				let url = '/serCheckmalist?number=' + this.pageSize + '&page_num=' + this.curPage
+				uni.showLoading({
+					title: '加载中'
+				})
+				if (this.checkno) {
+					url = url + '&checkno=' + this.checkno
+				}
+				if (this.supplier) {
+					url = url + '&providername=' + this.supplier
+				}
+				uni.request({
+					url: this.urlPre + url,
+					data: {},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								this.listData = res.data.checkmalist.map(item => {
+									item.dateTxt = this.formatToString(item.sheetdate.time, 'Simple', '-')
+									return item
+								})
+								this.total = res.data.receiveCount
+								uni.hideLoading()
+								break
+							  default:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						this.listData = []
+						this.total = 0
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			},
+			formatToString (parameter,  formatType, splitType) {
+				var oDate
+				if (typeof parameter === 'object') {
+				// 传递的是Date
+				oDate = parameter
+				} else {
+				// 传递的是秒数则转换为Date类型
+				oDate = new Date(parameter)
+				}
+				var oYear = oDate.getFullYear()
+				var oMonth = oDate.getMonth() + 1
+				var oDay = oDate.getDate()
+				var oHour = oDate.getHours()
+				var oMin = oDate.getMinutes()
+				var oSen = oDate.getSeconds()
+				switch (formatType) {
+					case 'Complete':
+						return (oYear + splitType + this.getzf(oMonth) + splitType + this.getzf(oDay) + ' ' + this.getzf(oHour) + ':' + this.getzf(oMin) + ':' + this.getzf(oSen))
+						break
+					case 'Simple':
+						return (oYear + splitType + this.getzf(oMonth) + splitType + this.getzf(oDay))
+						break
+					case 'NotSecond':
+						return (oYear + splitType + this.getzf(oMonth) + splitType + this.getzf(oDay) + ' ' + this.getzf(oHour) + ':' + this.getzf(oMin))
+						break
+				}
+			},
+			getzf (num) {
+				if (parseInt(num) < 10) {
+					num = '0' + num
+				}
+				return num
 			}
 		}
 	}
@@ -67,7 +160,7 @@
 <style>
 	.List{
 		width: 100vw;
-		height: 100vh;
+		min-height: 100vh;
 		background: #FFFFFF;
 		display: flex;
 		flex-direction: column;
@@ -75,7 +168,8 @@
 	}
 	.TopSearchBar{
 		width: 100vw;
-		height: 60upx;
+		/* height: 60upx; */
+		padding: 10upx 0;
 		background: #79B2D8;
 		display: flex;
 		justify-content: flex-start;
@@ -114,6 +208,7 @@
 	}
 	.ListBlock{
 		width: 100%;
+		background: #FFFFFF;
 		position: relative;
 		top: 120upx;
 		display: flex;

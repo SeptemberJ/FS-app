@@ -1,9 +1,9 @@
 <template>
 	<view class="Detail">
 		<view class="TopInfo">
-			<text>检验单号：</text>
-			<text>检验日期：</text>
-			<text>供应商：</text>
+			<text>检验单号：{{checkno}}</text>
+			<text>物料代码：{{matcode}}</text>
+			<text style="width: 100%;">物料名称：{{matname}}</text>
 		</view>
 		<view class="ListColumn">
 			<text style="width: 150upx;">物料代码</text>
@@ -41,26 +41,33 @@
 	export default {
 		data() {
 			return {
+				checkno: '',
+				matname: '',
+				matcode: '',
 				listData: [
-					{
-						name: 'MAT马达马达马达',
-						code: 'P123545',
-						model: '大型',
-						shNumber: 3555,
-						slNumber: 35
-					},
-					{
-						name: 'MAT马达',
-						code: 'P123545',
-						model: '大型',
-						shNumber: 3555,
-						slNumber: 35
-					}
+					// {
+					// 	name: 'MAT马达马达马达',
+					// 	code: 'P123545',
+					// 	model: '大型',
+					// 	shNumber: 3555,
+					// 	slNumber: 35
+					// },
+					// {
+					// 	name: 'MAT马达',
+					// 	code: 'P123545',
+					// 	model: '大型',
+					// 	shNumber: 3555,
+					// 	slNumber: 35
+					// }
 				]
 			}
 		},
-		onLoad() {
-
+		onLoad: function (option) {
+			let Info = JSON.parse(option.Info)
+			console.log(Info)
+			this.checkno = Info.checkno
+			this.matname = Info.matname
+			this.matcode = Info.matcode
 		},
 		methods: {
 

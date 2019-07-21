@@ -1,9 +1,9 @@
 <template>
 	<view class="Detail">
 		<view class="TopInfo">
-			<text>检验单号：</text>
-			<text>检验日期：</text>
-			<text>供应商：</text>
+			<text>检验单号：{{checkno}}</text>
+			<text>检验日期：{{dateTxt}}</text>
+			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
 			<text style="width: 120upx;">检验部位</text>
@@ -20,22 +20,22 @@
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.department" auto-height placeholder="请输入"/>
-						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.require" auto-height placeholder="请输入"/>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="1" :value="item.test1" :range="testArray">
-							<view class="uni-input">{{testArray[item.test1]}}</view>
+						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.parmname" auto-height placeholder="请输入"/>
+						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
+						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
+							<view class="uni-input">{{testArray[item.parmvalue]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="2" :value="item.test2" :range="testArray">
-							<view class="uni-input">{{testArray[item.test2]}}</view>
+						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="1" :value="item.test2" :range="testArray">
+							<view class="uni-input">{{testArray[item.parmvalue1]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="3" :value="item.test3" :range="testArray">
-							<view class="uni-input">{{testArray[item.test3]}}</view>
+						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="2" :value="item.test3" :range="testArray">
+							<view class="uni-input">{{testArray[item.parmvalue2]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="4" :value="item.test4" :range="testArray">
-							<view class="uni-input">{{testArray[item.test4]}}</view>
+						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="3" :value="item.test4" :range="testArray">
+							<view class="uni-input">{{testArray[item.parmvalue3]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="5" :value="item.test5" :range="testArray">
-							<view class="uni-input">{{testArray[item.test5]}}</view>
+						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="4" :value="item.test5" :range="testArray">
+							<view class="uni-input">{{testArray[item.parmvalue4]}}</view>
 						</picker>
 						<view style="width: 50upx;" @click="deleteLine(idx)">
 							<image style="width: 40upx;height: 40upx;display: block;margin: 5upx auto;" src="../../../static/images/delete.png"></image>
@@ -47,50 +47,84 @@
 		<view class="AddLine">
 			<image @click="AddLine" style="width: 40upx;height: 40upx;display: block;margin: 10upx auto;" src="../../../static/images/add.png"></image>
 			</view>
-		<view class="SubmitBt">保 存</view>
+		<view class="SubmitBt" @click="save">保 存</view>
 	</view>
 </template>
 
 <script>
+	import {
+	    mapState
+	} from 'vuex'
 	export default {
 		data() {
 			return {
+				checkno: '',
+				dateTxt: '',
+				supplier: '',
 				testArray: ['合格', '不合格', '请选择'],
 				listData: [
 					{
-						department: 'MAT马达马达马达',
-						require: 'P123545',
-						test1: 0,
-						test2: 0,
-						test3: 0,
-						test4: 0,
-						test5: 1,
-					},
-					{
-						department: 'MAT马达1马达2马达',
-						require: 'P123545',
-						test1: 0,
-						test2: 0,
-						test3: 0,
-						test4: 0,
-						test5: 1,
+						parmname: '',
+						djjlh: "djjlh",
+						matjlh: "matjlh",
+						djjlh1: "djjlh1",
+						parmvalueref: '',
+						parmvalue: 2,
+						parmvalue1: 2,
+						parmvalue2: 2,
+						parmvalue3: 2,
+						parmvalue4: 2,
+						checkor: '',
+						memo: ''
 					}
+					// {
+					// 	department: 'MAT马达马达马达',
+					// 	require: 'P123545',
+					// 	test1: 0,
+					// 	test2: 0,
+					// 	test3: 0,
+					// 	test4: 0,
+					// 	test5: 1,
+					// },
+					// {
+					// 	department: 'MAT马达1马达2马达',
+					// 	require: 'P123545',
+					// 	test1: 0,
+					// 	test2: 0,
+					// 	test3: 0,
+					// 	test4: 0,
+					// 	test5: 1,
+					// }
 				]
 			}
 		},
-		onLoad() {
-
+		computed: {
+			...mapState({
+			  urlPre: state => state.urlPre
+			})
+		},
+		onLoad: function (option) {
+			let Info = JSON.parse(option.Info)
+			this.checkno = Info.checkno
+			this.supplier = Info.supplier
+			this.dateTxt = Info.dateTxt
+			// this.jlh = Info.jlh
 		},
 		methods: {
 			AddLine () {
 				this.listData.push({
-						department: '',
-						require: '',
-						test1: 2,
-						test2: 2,
-						test3: 2,
-						test4: 2,
-						test5: 2,
+						parmname: '',
+						djjlh: "djjlh",
+						matjlh: "matjlh",
+						djjlh1: "djjlh1",
+						parmvalueref: '',
+						parmvalue: 2,
+						parmvalue1: 2,
+						parmvalue2: 2,
+						parmvalue3: 2,
+						parmvalue4: 2,
+						checkor: '',
+						memo: ''
 					})
 			},
 			deleteLine (idx) {
@@ -98,8 +132,73 @@
 			},
 			changeTest (e) {
 				var index = e.currentTarget.dataset.idx
-				var pro = 'test' + e.currentTarget.dataset.kind
+				var pro = 'parmvalue' + (e.currentTarget.dataset.kind == 0 ? '' : e.currentTarget.dataset.kind)
 				this.listData[index][pro] = e.target.value
+			},
+			save () {
+				if (this.listData.map.length == 0) {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '请至少添加一行记录!'
+					})
+					return false
+				}
+				let ifHasEmpty = false
+				this.listData.map(item => {
+					if (item.parmname == '' || item.parmvalueref == '' || item.parmvalue == 2 || item.parmvalue1 == 2 || item.parmvalue2 == 2 || item.parmvalue3 == 2 || item.parmvalue4 == 2) {
+						ifHasEmpty = true
+						uni.showToast({
+						    image: '/static/images/attention.png',
+						    title: '请将信息填写完整!'
+						})
+						return false
+					}
+				})
+				if (!ifHasEmpty) {
+					console.log(this.listData)
+					this.submit(this.listData)
+					
+				}
+			},
+			submit (Data) {
+				uni.request({
+					url: this.urlPre + '/insertCheckdeParm',
+					method: 'POST',
+					data: {
+						checkdeparmlist: Data
+					},
+					success: (res) => {
+						// switch (res.data.code) {
+						// 	case 1:
+						// 		uni.hideLoading()
+						// 		uni.showToast({
+						// 		    icon: 'success',
+						// 		    title: '收料成功!'
+						// 		})
+						// 		setTimeout(() => {
+						// 			this.getDetail(this.songhuoId)
+						// 		}, 1500)
+						// 		break
+						// 	  default:
+						// 		uni.hideLoading()
+						// 		uni.showToast({
+						// 		    image: '/static/images/attention.png',
+						// 		    title: '服务器繁忙!'
+						// 		})
+						// }
+					},
+					fail: (err) => {
+						this.listData = []
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
 			}
 		}
 	}

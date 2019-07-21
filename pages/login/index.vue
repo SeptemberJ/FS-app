@@ -24,18 +24,90 @@
 </template>
 
 <script>
+	import {
+	    mapState,
+	    mapActions
+	} from 'vuex'
 	export default {
 		data() {
 			return {
-				username: '',
-				password: ''
+				username: 'cangku',
+				password: '123456'
 			}
 		},
 		onLoad() {
 
 		},
+		computed: {
+			...mapState({
+			  urlPre: state => state.urlPre
+			})
+		},
 		methods: {
-
+			...mapActions([
+			  'updateUserInfo'
+			]),
+			login () {
+				// 校验
+				if (this.username == '') {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '用户名不能为空!'
+					})
+					return false
+				}
+				if (this.password == '') {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '密码不能为空!'
+					})
+					return false
+				}
+				this.loginRequest()
+			},
+			loginRequest () {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: this.urlPre + '/pdalogin?username='+ this.username + '&pwd=' + this.password,
+					data: {},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								// 更新用户信息
+								this.updateUserInfo(res.data.memberInfo)
+								uni.redirectTo({
+									url: '/pages/module/index'
+								})
+								break
+							  case 0:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '用户名或密码错误!'
+								})
+								break
+							  default:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: err.errMsg,
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			}
 		}
 	}
 </script>

@@ -1,14 +1,14 @@
 <template>
 	<view class="Detail">
 		<view class="TopInfo">
-			<text>检验单号：</text>
-			<text>检验日期：</text>
-			<text>供应商：</text>
+			<text>检验单号：{{checkno}}</text>
+			<text>检验日期：{{dateTxt}}</text>
+			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
 			<text style="width: 150upx;">物料代码</text>
 			<text style="width: 150upx;">代码</text>
-			<text style="width: 150upx;">规格</text>
+			<text style="width: 150upx;">型号</text>
 			<text style="width: 100upx;">到货数量</text>
 			<text style="width: 100upx;">合格</text>
 			<text style="width: 100upx;">不合格</text>
@@ -19,58 +19,102 @@
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<text style="width: 150upx;">{{item.name}}</text>
-						<text style="width: 150upx;">{{item.code}}</text>
-						<text style="width: 150upx;">{{item.model}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
+						<text style="width: 150upx;">{{item.matname}}</text>
+						<text style="width: 150upx;">{{item.matcode}}</text>
+						<text style="width: 150upx;">{{item.norms}}</text>
+						<text style="width: 100upx;">{{item.sendnum}}</text>
+						<text style="width: 100upx;">{{item.oknum}}</text>
+						<text style="width: 100upx;">{{item.failnum}}</text>
 					</view>
 					<view class="OperationBt">
 						<text style="background: #FA8888;" @click="GoProject">项 目</text>
-						<text style="background: #A4A2E4;" @click="GoSerialNumber">序 列 号</text>
+						<text style="background: #A4A2E4;" @click="GoSerialNumber(item)">序 列 号</text>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="SubmitBt">保 存</view>
+		<!-- <view class="SubmitBt">保 存</view> -->
 	</view>
 </template>
 
 <script>
+	import {
+	    mapState
+	} from 'vuex'
 	export default {
 		data() {
 			return {
-				listData: [
-					{
-						name: 'MAT马达马达马达',
-						code: 'P123545',
-						model: '大型',
-						shNumber: 3555,
-						slNumber: 35
-					},
-					{
-						name: 'MAT马达',
-						code: 'P123545',
-						model: '大型',
-						shNumber: 3555,
-						slNumber: 35
-					}
-				]
+				Info: '',
+				jlh: '',
+				checkno: '',
+				dateTxt: '',
+				supplier: '',
+				listData: []
 			}
 		},
-		onLoad() {
-
+		computed: {
+			...mapState({
+			  urlPre: state => state.urlPre
+			})
+		},
+		onLoad: function (option) {
+			let Info = JSON.parse(option.Info)
+			this.Info = Info
+			this.checkno = Info.checkno
+			this.supplier = Info.providername
+			this.dateTxt = Info.dateTxt
+			this.jlh = Info.jlh
+			this.getDetail(Info.jlh)
 		},
 		methods: {
-			GoProject () {
-				uni.navigateTo({
-					url: '/pages/inspectionManagement/project/index' 
+			getDetail (Jlh) {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: this.urlPre + '/serCheckdeList?jlh=' + Jlh,
+					data: {},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								this.listData = res.data.checkdelist
+								uni.hideLoading()
+								break
+							  default:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						this.listData = []
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
 				})
 			},
-			GoSerialNumber () {
+			GoProject () {
+				let Info = {
+					checkno: this.checkno,
+					supplier: this.supplier,
+					dateTxt: this.dateTxt
+				}
 				uni.navigateTo({
-					url: '/pages/inspectionManagement/serialNumber/index' 
+					url: '/pages/inspectionManagement/project/index?Info=' + JSON.stringify(Info) 
+				})
+			},
+			GoSerialNumber (Info) {
+				Info.checkno = this.checkno
+				uni.navigateTo({
+					url: '/pages/inspectionManagement/serialNumber/index?Info=' + JSON.stringify(Info) 
 				})
 			}
 		}
