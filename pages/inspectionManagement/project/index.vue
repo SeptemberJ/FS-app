@@ -6,47 +6,49 @@
 			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
-			<text style="width: 120upx;">检验部位</text>
-			<text style="width: 120upx;">技术要求</text>
-			<text style="width: 90upx;">1次检验</text>
-			<text style="width: 90upx;">2次检验</text>
-			<text style="width: 90upx;">3次检验</text>
-			<text style="width: 90upx;">4次检验</text>
-			<text style="width: 90upx;">5次检验</text>
+			<text style="width: 98upx;">检验部位</text>
+			<text style="width: 87upx;">技术要求</text>
+			<text style="width: 87upx;">1检</text>
+			<text style="width: 87upx;">2检</text>
+			<text style="width: 87upx;">3检</text>
+			<text style="width: 87upx;">4检</text>
+			<text style="width: 87upx;">5检</text>
+			<text style="width: 80upx;">备注</text>
 			<text style="width: 50upx;" class="ColorWhite">删除</text>
 		</view>
 		<view class="ListBlock">
 			<view class="ListMain">
-				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.parmname" auto-height placeholder="请输入"/>
-						<textarea style="width: 120upx;padding: 0 5upx;font-size: 22upx;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
+						<textarea style="width: 98upx;padding: 5upx;font-size: 22upx;" v-model="item.parmname" auto-height placeholder="请输入"/>
+						<textarea style="width: 87upx;padding: 5upx;font-size: 22upx;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
+						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="1" :value="item.test2" :range="testArray">
+						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="1" :value="item.test2" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue1]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="2" :value="item.test3" :range="testArray">
+						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="2" :value="item.test3" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue2]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="3" :value="item.test4" :range="testArray">
+						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="3" :value="item.test4" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue3]}}</view>
 						</picker>
-						<picker style="width: 90upx;" @change="changeTest" :data-idx="idx" :data-kind="4" :value="item.test5" :range="testArray">
+						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="4" :value="item.test5" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue4]}}</view>
 						</picker>
+						<textarea style="width: 80upx;padding: 5upx;font-size: 22upx;" v-model="item.memo" auto-height placeholder="请输入"/>
 						<view style="width: 50upx;" @click="deleteLine(idx)">
 							<image style="width: 40upx;height: 40upx;display: block;margin: 5upx auto;" src="../../../static/images/delete.png"></image>
 						</view>
 					</view>
 				</view>
+				<!-- <text class="EmptyData" v-if="listData.length == 0">暂无数据</text> -->
 			</view>
 		</view>
 		<view class="AddLine">
 			<image @click="AddLine" style="width: 40upx;height: 40upx;display: block;margin: 10upx auto;" src="../../../static/images/add.png"></image>
-			</view>
+		</view>
 		<view class="SubmitBt" @click="save">保 存</view>
 	</view>
 </template>
@@ -58,53 +60,23 @@
 	export default {
 		data() {
 			return {
+				Info: '',
 				checkno: '',
 				dateTxt: '',
 				supplier: '',
 				testArray: ['合格', '不合格', '请选择'],
-				listData: [
-					{
-						parmname: '',
-						djjlh: "djjlh",
-						matjlh: "matjlh",
-						djjlh1: "djjlh1",
-						parmvalueref: '',
-						parmvalue: 2,
-						parmvalue1: 2,
-						parmvalue2: 2,
-						parmvalue3: 2,
-						parmvalue4: 2,
-						checkor: '',
-						memo: ''
-					}
-					// {
-					// 	department: 'MAT马达马达马达',
-					// 	require: 'P123545',
-					// 	test1: 0,
-					// 	test2: 0,
-					// 	test3: 0,
-					// 	test4: 0,
-					// 	test5: 1,
-					// },
-					// {
-					// 	department: 'MAT马达1马达2马达',
-					// 	require: 'P123545',
-					// 	test1: 0,
-					// 	test2: 0,
-					// 	test3: 0,
-					// 	test4: 0,
-					// 	test5: 1,
-					// }
-				]
+				listData: []
 			}
 		},
 		computed: {
 			...mapState({
-			  urlPre: state => state.urlPre
+			  urlPre: state => state.urlPre,
+			  userInfo: state => state.userInfo
 			})
 		},
 		onLoad: function (option) {
 			let Info = JSON.parse(option.Info)
+			this.Info = Info
 			this.checkno = Info.checkno
 			this.supplier = Info.supplier
 			this.dateTxt = Info.dateTxt
@@ -114,16 +86,16 @@
 			AddLine () {
 				this.listData.push({
 						parmname: '',
-						djjlh: "djjlh",
-						matjlh: "matjlh",
-						djjlh1: "djjlh1",
+						djjlh: this.Info.jlh,
+						matjlh: this.Info.matjlh,
+						djjlh1: this.Info.matjlh,
 						parmvalueref: '',
 						parmvalue: 2,
 						parmvalue1: 2,
 						parmvalue2: 2,
 						parmvalue3: 2,
 						parmvalue4: 2,
-						checkor: '',
+						checkor: this.userInfo.realname,
 						memo: ''
 					})
 			},

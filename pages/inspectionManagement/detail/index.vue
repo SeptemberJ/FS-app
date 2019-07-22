@@ -23,17 +23,19 @@
 						<text style="width: 150upx;">{{item.matcode}}</text>
 						<text style="width: 150upx;">{{item.norms}}</text>
 						<text style="width: 100upx;">{{item.sendnum}}</text>
-						<text style="width: 100upx;">{{item.oknum}}</text>
-						<text style="width: 100upx;">{{item.failnum}}</text>
+						<input class="uni-input" @blur="changeOkNum(item)" v-model="item.oknum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
+						<input class="uni-input" @blur="changeFail(item)" v-model="item.failnum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
+						<!-- <text style="width: 100upx;">{{item.oknum}}</text>
+						<text style="width: 100upx;">{{item.failnum}}</text> -->
 					</view>
 					<view class="OperationBt">
-						<text style="background: #FA8888;" @click="GoProject">项 目</text>
-						<text style="background: #A4A2E4;" @click="GoSerialNumber(item)">序 列 号</text>
+						<text style="background: #FA8888;" @click="GoProject(item)">检验项目管理</text>
+						<text style="background: #A4A2E4;" @click="GoSerialNumber(item)">序列号管理</text>
 					</view>
 				</view>
 			</view>
 		</view>
-		<!-- <view class="SubmitBt">保 存</view> -->
+		<view class="SubmitBt" @click="save">保 存</view>
 	</view>
 </template>
 
@@ -101,12 +103,10 @@
 					}
 				})
 			},
-			GoProject () {
-				let Info = {
-					checkno: this.checkno,
-					supplier: this.supplier,
-					dateTxt: this.dateTxt
-				}
+			GoProject (Info) {
+				Info.checkno = this.checkno
+				Info.supplier = this.supplier
+				Info.dateTxt = this.dateTxt
 				uni.navigateTo({
 					url: '/pages/inspectionManagement/project/index?Info=' + JSON.stringify(Info) 
 				})
@@ -116,6 +116,21 @@
 				uni.navigateTo({
 					url: '/pages/inspectionManagement/serialNumber/index?Info=' + JSON.stringify(Info) 
 				})
+			},
+			save () {
+				console.log(this.listData)
+			},
+			changeOkNum (item) {
+				
+			},
+			changeFail (item) {
+				if (item.oknum + item.failnum > item.sendnum) {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '合格和不合格数量之和不能大于到货数量!'
+					})
+					return false
+				}
 			}
 		}
 	}
@@ -158,6 +173,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 70upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -199,12 +215,14 @@
 		color: #777;
 	}
 	.SubmitBt{
-		width: 80%;
+		width: 100%;
 		height: 60upx;
+		position: fixed;
+		left: 0;
+		bottom: 0;
 		text-align: center;
 		color: #FFFFFF;
 		line-height: 60upx;
 		background: #e64340;
-		margin: 50upx auto 20upx auto;
 	}
 </style>

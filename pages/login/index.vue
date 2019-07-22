@@ -1,25 +1,25 @@
 <template>
-	<view class="Login">
-		<!-- Logo -->
-		<view class="Logo">
-			<image src="../../static/images/logo.png"></image>
-		</view>
-		<!-- 信息输入 -->
-		<view class="InputGroup">
-			<view class="uni-form-item uni-row InputBarBlock">
-				<image src="../../static/images/user.png" class="inputIcon"></image>
-				<view class="with-fun">
-					<input class="uni-input" v-model="username" placeholder="用户名"/>
+	<view class="LoginWrap">
+		<view class="Login">
+			<!-- Logo -->
+			<image class="Logo" style="" src="../../static/images/logo.png"></image>
+			<!-- 信息输入 -->
+			<view class="InputGroup">
+				<view class="uni-form-item uni-row InputBarBlock">
+					<image src="../../static/images/user.png" class="inputIcon"></image>
+					<view class="with-fun">
+						<input class="uni-input" v-model="username" placeholder="用户名"/>
+					</view>
+				</view>
+				<view class="uni-form-item uni-row InputBarBlock" style="margin-top: 10upx;">
+					<image src="../../static/images/password.png" class="inputIcon"></image>
+					<view class="with-fun">
+						<input class="uni-input" v-model="password" password placeholder="密码"/>
+					</view>
 				</view>
 			</view>
-			<view class="uni-form-item uni-row InputBarBlock" style="margin-top: 10upx;">
-				<image src="../../static/images/password.png" class="inputIcon"></image>
-				<view class="with-fun">
-					<input class="uni-input" v-model="password" password placeholder="密码"/>
-				</view>
-			</view>
+			<view class="loginBt" @click="login">登 陆</view>
 		</view>
-		<view class="loginBt" @click="login">登 陆</view>
 	</view>
 </template>
 
@@ -80,6 +80,7 @@
 								uni.redirectTo({
 									url: '/pages/module/index'
 								})
+								uni.hideLoading()
 								break
 							  case 0:
 								uni.hideLoading()
@@ -113,29 +114,30 @@
 </script>
 
 <style>
-	.Login{
+	.LoginWrap{
 		width: 100vw;
 		height: 100vh;
+		/* height: calc(100vh - 44px); */
 		background: #FFFFFF;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	.Login{
+		width: 100vw;
+		margin-top: 50upx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 	.Logo{
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.Logo image{
-		width: 150upx;
-		height: 150upx;
-		display: block;
-		margin-top: 150upx;
+		width: 100upx;
+		height: 100upx;
+		margin-bottom: 50upx;
 	}
 	.InputGroup{
 		width: 70%;
-		margin: 100upx auto 0 auto;
 		padding: 0 10px;
 		display: flex;
 		flex-direction: column;
@@ -144,9 +146,6 @@
 	}
 	.InputBarBlock{
 		border-bottom: 1px solid #8a8a8a;
-		/* padding: 10upx 20upx;
-		background: pink;
-		border-radius: 50upx; */
 	}
 	.uni-form-item .with-fun{
 		background: transparent;
@@ -159,13 +158,13 @@
 	}
 	.loginBt{
 		width: 70%;
-		height: 80upx;
+		height: 60upx;
 		text-align: center;
-		font-size: 32upx;
-		line-height: 80upx;
+		font-size: 30upx;
+		line-height: 60upx;
 		background: #79B2D8;
 		color: #FFFFFF;
 		border-radius: 0;
-		margin-top: 80upx;
+		margin-top: 60upx;
 	}
 </style>

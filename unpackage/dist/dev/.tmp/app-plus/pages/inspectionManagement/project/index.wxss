@@ -1,0 +1,158 @@
+
+.Detail{
+	width: 100vw;
+	min-height: 100vh;
+	background: #FFFFFF;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+.TopInfo{
+	width: 100%;
+	padding: 20rpx 0;
+	height: 100rpx;
+	/* border-bottom: 2px dashed #CCCCCC; */
+}
+.TopInfo text{
+	width: calc(50% - 20rpx);
+	padding-left: 20rpx;
+	text-align: left;
+	float: left;
+	color: #777;
+}
+.ListColumn{
+	width: 100%;
+	height: 60rpx;
+	background: #79B2D8;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+.ListColumn text{
+	text-align: center;
+	font-size: 22rpx;
+}
+.ListBlock{
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+.ListMain{
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+.ListItem{
+	width: 100%;
+	/* padding: 24px 0; */
+	min-height: 100rpx;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+.ListItem text{
+	text-align: center;
+	font-size: 22rpx;
+	/* color: #777; */
+}
+.OperationBt{
+	width: 750rpx;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	/* border-bottom: 1px solid #CCCCCC; */
+}
+.OperationBt text{
+	width: 100%;
+	height: 50rpx;
+	line-height: 50rpx;
+	text-align: center;
+	display: block;
+	font-size: 22rpx;
+	color: #FFFFFF;
+}
+.ListItem input{
+	text-align: center;
+	font-size: 22rpx;
+	color: #777;
+}
+.AddLine{
+	width: 60rpx;
+	height: 60rpx;
+	border-radius: 50%;
+	text-align: center;
+	color: #0e932e;
+	line-height: 60rpx;
+	border: 1px solid #0e932e;
+	margin: 50rpx auto 120rpx auto;
+}
+.SubmitBt{
+	width: 100%;
+	height: 60rpx;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	text-align: center;
+	color: #FFFFFF;
+	line-height: 60rpx;
+	background: #e64340;
+}
+.uni-input{
+	text-align: center;
+	padding: 0 !important;
+	font-size: 22rpx !important;
+	background: aliceblue;
+}
+/* 
+.uni-textarea-compute, .uni-textarea-placeholder, .uni-textarea-textarea, .uni-textarea-wrapped{
+width: 80upx;
+} */
+
+

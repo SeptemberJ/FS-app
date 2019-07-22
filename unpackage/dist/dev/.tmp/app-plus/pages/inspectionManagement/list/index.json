@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "检验管理",
+  "navigationBarBackgroundColor": "#387DB3",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "uni-pagination": "/components/uni-pagination/uni-pagination"
+  }
+}

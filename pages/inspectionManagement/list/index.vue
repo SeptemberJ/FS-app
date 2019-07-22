@@ -1,7 +1,35 @@
 <template>
 	<view class="List">
-		<view style="position: fixed;top: 44px;left: 0;z-index: 999;">
-			<view class="TopSearchBar">
+		<!-- 44px -->
+		<view style="position: fixed;top: 0px;left: 0;z-index: 999;;">
+			<view class="TopSearchWrap">
+				<view class="TopSearchBar">
+					<view class="InputItem" style="width: 30%;">
+						<text>单号</text>
+						<input class="uni-input" v-model="checkno"/>
+					</view>
+					<view class="InputItem" style="width: 30%;">
+						<text>供应商</text>
+						<input class="uni-input" v-model="supplier"/>
+					</view>
+					<view class="InputItem" style="width: 30%;">
+						<text>状态</text>
+						<picker style="width: 70%;" :value="status" :range="statusArray" @change="changeStatus">
+							<view class="uni-input">{{statusArray[status]}}</view>
+						</picker>
+					</view>
+					<view class="InputItem" style="width: 10%;">
+						<image class="searchBt" style="" src="../../../static/images/search.png" @click="getList"></image>
+					</view>
+				</view>
+				<view class="ListColumn">
+					<text>检验单号</text>
+					<text>检验日期</text>
+					<text>供应商</text>
+					<text>检验状态</text>
+				</view>
+			</view>
+			<!-- <view class="TopSearchBar">
 				<text>单号</text>
 				<input class="uni-input" v-model="checkno"/>
 				<text>供应商</text>
@@ -13,48 +41,44 @@
 				<text>检验日期</text>
 				<text>供应商</text>
 				<text>检验状态</text>
-			</view>
+			</view> -->
 		</view>
 		<view class="ListBlock">
 			<view class="ListMain">
-				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view class="ListItem" v-for="(item, idx) in listData" :key="idx" @click="GoDetail(item)">
 					<text>{{item.checkno}}</text>
 					<text>{{item.dateTxt}}</text>
 					<text>{{item.providername}}</text>
-					<text>{{item.providername}}</text>
+					<text>{{item.statusTxt}}</text>
 				</view>
+				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 			</view>
+		</view>
+		<view class="MarginT_20" style="width: 100%;height:60upx;padding: 10upx 0;position: fixed;bottom: 0;left: 0;background: #FFFFFF;border-top: 1px solid #EEEEEE;">
+			<uni-pagination :show-icon="true" title="标题文字" :pageSize="pageSize" :current="curPage" :total="total" @change="changePage"></uni-pagination>	
 		</view>
 	</view>
 </template>
 
 <script>
+	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {
 	    mapState
 	} from 'vuex'
 	export default {
+		components: {
+			uniPagination
+		},
 		data() {
 			return {
 				checkno: '',
 				supplier: '',
+				status: 3,
 				curPage: 1,
 				pageSize: 10,
 				total: 0,
-				listData: [
-					{
-						orderNo: 'SH1907200001',
-						date: '',
-						supplier: '',
-						status: '为收料'
-					},
-					{
-						orderNo: 'SH1907200001',
-						date: '',
-						supplier: '',
-						status: ''
-					}
-				]
+				listData: [],
+				statusArray: ['待收料', '部分已审', '全部已审', '全部']
 			}
 		},
 		computed: {
@@ -69,6 +93,9 @@
 			this.getList()
 		},
 		methods: {
+			changeStatus (e) {
+				this.status = e.detail.value
+			},
 			GoDetail (Info) {
 				uni.navigateTo({
 					url: '/pages/inspectionManagement/detail/index?Info=' + JSON.stringify(Info)
@@ -85,6 +112,9 @@
 				if (this.supplier) {
 					url = url + '&providername=' + this.supplier
 				}
+				if (this.status != 3) {
+					url = url + '&fstatus=' + this.status
+				}
 				uni.request({
 					url: this.urlPre + url,
 					data: {},
@@ -92,10 +122,11 @@
 						switch (res.data.code) {
 							case 1:
 								this.listData = res.data.checkmalist.map(item => {
+									item.statusTxt = item.fstatus == 0 ? '待收料' : (item.fstatus == 1 ? '部分已审' : (item.fstatus == 2 ? '全部已审' : '其它'))
 									item.dateTxt = this.formatToString(item.sheetdate.time, 'Simple', '-')
 									return item
 								})
-								this.total = res.data.receiveCount
+								this.total = res.data.checkmaCount
 								uni.hideLoading()
 								break
 							  default:
@@ -152,6 +183,10 @@
 					num = '0' + num
 				}
 				return num
+			},
+			changePage(e) {
+				this.curPage = e.current
+				this.getList()
 			}
 		}
 	}
@@ -166,28 +201,39 @@
 		flex-direction: column;
 		align-items: center;
 	}
+	.TopSearchWrap{
+		width: 100%;
+		height: 120upx;
+		display: flex;
+		flex-direction: column;
+	}
 	.TopSearchBar{
 		width: 100vw;
-		/* height: 60upx; */
+		height: 60upx;
 		padding: 10upx 0;
-		background: #79B2D8;
+		background: #387DB3;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 	}
-	.TopSearchBar text{
+	.InputItem{
+		display: flex;
+		align-items: center;
+	}
+	.InputItem text{
 		padding: 0 10upx;
 		color: #FFFFFF;
 		font-size: 22upx;
 	}
 	.searchBt{
-		width: 120upx;
+		width: 50upx;
 		height: 50upx;
-		margin: 0 10upx;
-		line-height: 50upx;
+		margin: 0 auto;
+		/* line-height: 50upx;
 		text-align: center;
 		font-size: 22upx;
-		background: #FFFFFF;
+		background: #387DB3;
+		color: #FFFFFF; */
 	}
 	.uni-input{
 		padding: 0 10upx;
@@ -195,16 +241,18 @@
 	.ListColumn{
 		width: 100%;
 		height: 60upx;
-		background: #79B2D8;
+		background: #FFFFFF;
+		/* background: #79B2D8; */
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid #79B2D8;
+		border-bottom: 1px dashed #ccc;
 	}
 	.ListColumn text{
+		width: 20%;
+		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;
-		color: #FFFFFF;
 	}
 	.ListBlock{
 		width: 100%;
@@ -213,6 +261,7 @@
 		top: 120upx;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 60upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -229,6 +278,8 @@
 		border-bottom: 1px solid #EEEEEE;
 	}
 	.ListItem text{
+		width: 20%;
+		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;
 		color: #777;
