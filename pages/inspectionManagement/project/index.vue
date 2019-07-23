@@ -49,7 +49,7 @@
 		<view class="AddLine">
 			<image @click="AddLine" style="width: 40upx;height: 40upx;display: block;margin: 10upx auto;" src="../../../static/images/add.png"></image>
 		</view>
-		<view class="SubmitBt" @click="save">保 存</view>
+		<button class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
 	</view>
 </template>
 
@@ -60,6 +60,7 @@
 	export default {
 		data() {
 			return {
+				ifNoWork: false,
 				Info: '',
 				checkno: '',
 				dateTxt: '',
@@ -108,6 +109,9 @@
 				this.listData[index][pro] = e.target.value
 			},
 			save () {
+				if (this.ifNoWork) {
+					return false
+				}
 				if (this.listData.map.length == 0) {
 					uni.showToast({
 					    image: '/static/images/attention.png',
@@ -127,12 +131,14 @@
 					}
 				})
 				if (!ifHasEmpty) {
-					console.log(this.listData)
 					this.submit(this.listData)
-					
 				}
 			},
 			submit (Data) {
+				this.ifNoWork = true
+				uni.showLoading({
+					title: '提交中'
+				})
 				uni.request({
 					url: this.urlPre + '/insertCheckdeParm',
 					method: 'POST',
@@ -140,29 +146,31 @@
 						checkdeparmlist: Data
 					},
 					success: (res) => {
-						// switch (res.data.code) {
-						// 	case 1:
-						// 		uni.hideLoading()
-						// 		uni.showToast({
-						// 		    icon: 'success',
-						// 		    title: '收料成功!'
-						// 		})
-						// 		setTimeout(() => {
-						// 			this.getDetail(this.songhuoId)
-						// 		}, 1500)
-						// 		break
-						// 	  default:
-						// 		uni.hideLoading()
-						// 		uni.showToast({
-						// 		    image: '/static/images/attention.png',
-						// 		    title: '服务器繁忙!'
-						// 		})
-						// }
+						switch (res.data.code) {
+							case 0:
+								uni.hideLoading()
+								uni.showToast({
+								    icon: 'success',
+								    title: '检验项目新增成功!'
+								})
+								setTimeout(() => {
+									this.ifNoWork = false
+								}, 1500)
+								break
+							  default:
+								uni.hideLoading()
+								this.ifNoWork = false
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
 					},
 					fail: (err) => {
-						this.listData = []
 						console.log('request fail', err)
+						// this.listData = []
 						uni.hideLoading()
+						this.ifNoWork = false
 						uni.showModal({
 							content: '接口报错!',
 							showCancel: false
@@ -195,7 +203,7 @@
 		padding-left: 20upx;
 		text-align: left;
 		float: left;
-		color: #777;
+		color: #333333;
 	}
 	.ListColumn{
 		width: 100%;
@@ -213,6 +221,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 80upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -230,7 +239,6 @@
 	.ListItem text{
 		text-align: center;
 		font-size: 22upx;
-		/* color: #777; */
 	}
 	.OperationBt{
 		width: 750upx;
@@ -251,7 +259,7 @@
 	.ListItem input{
 		text-align: center;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
 	}
 	.AddLine{
 		width: 60upx;
@@ -265,13 +273,14 @@
 	}
 	.SubmitBt{
 		width: 100%;
-		height: 60upx;
+		height: 80upx;
 		position: fixed;
 		left: 0;
 		bottom: 0;
+		border-radius: 0;
 		text-align: center;
 		color: #FFFFFF;
-		line-height: 60upx;
+		line-height: 80upx;
 		background: #e64340;
 	}
 	.uni-input{

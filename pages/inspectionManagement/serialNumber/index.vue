@@ -17,23 +17,22 @@
 		<view class="ListBlock">
 			<view class="ListMain">
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
-				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
+				<view v-for="(item, idx) in listData" :key="idx"  style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<text style="width: 150upx;">{{item.name}}</text>
-						<text style="width: 150upx;">{{item.code}}</text>
-						<text style="width: 150upx;">{{item.model}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
-						<text style="width: 100upx;">{{item.shNumber}}</text>
-					</view>
-					<view class="OperationBt">
-						<text style="background: #FA8888;">项 目</text>
-						<text style="background: #A4A2E4;">序 列 号</text>
+						<text style="width: 150upx;">{{item.matname}}</text>
+						<text style="width: 150upx;">{{item.matcode}}</text>
+						<text style="width: 150upx;">{{item.norms}}</text>
+						<text style="width: 100upx;">{{item.sendnum}}</text>
+						<input class="uni-input" style="width: 100upx;">{{item.oknum}}</input>
+						<input class="uni-input" style="width: 100upx;">{{item.failnum}}</input>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="SubmitBt">保 存</view>
+		<view class="AddLine">
+			<image @click="AddLine" style="width: 40upx;height: 40upx;display: block;margin: 10upx auto;" src="../../../static/images/add.png"></image>
+		</view>
+		<button class="SubmitBt"  @click="save">保 存</button>
 	</view>
 </template>
 
@@ -41,6 +40,7 @@
 	export default {
 		data() {
 			return {
+				Info: '',
 				checkno: '',
 				matname: '',
 				matcode: '',
@@ -64,13 +64,26 @@
 		},
 		onLoad: function (option) {
 			let Info = JSON.parse(option.Info)
+			this.Info = Info
 			console.log(Info)
 			this.checkno = Info.checkno
 			this.matname = Info.matname
 			this.matcode = Info.matcode
 		},
 		methods: {
-
+			AddLine () {
+				this.listData.push({
+						matname: this.Info.matname,
+						matcode: this.Info.matcode,
+						norms: this.Info.norms,
+						sendnum: this.Info.sendnum,
+						oknum: '',
+						failnum: ''
+					})
+			},
+			save () {
+				
+			}
 		}
 	}
 </script>
@@ -94,7 +107,7 @@
 		padding-left: 20upx;
 		text-align: left;
 		float: left;
-		color: #777;
+		color: #333333;
 	}
 	.ListColumn{
 		width: 100%;
@@ -129,7 +142,6 @@
 	.ListItem text{
 		text-align: center;
 		font-size: 22upx;
-		/* color: #777; */
 	}
 	.OperationBt{
 		width: 750upx;
@@ -150,15 +162,32 @@
 	.ListItem input{
 		text-align: center;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
+	}
+.AddLine{
+		width: 60upx;
+		height: 60upx;
+		border-radius: 50%;
+		text-align: center;
+		color: #0e932e;
+		line-height: 60upx;
+		border: 1px solid #0e932e;
+		margin: 50upx auto 120upx auto;
 	}
 	.SubmitBt{
-		width: 80%;
-		height: 60upx;
+		width: 100%;
+		height: 80upx;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		border-radius: 0;
 		text-align: center;
 		color: #FFFFFF;
-		line-height: 60upx;
+		line-height: 80upx;
 		background: #e64340;
-		margin: 50upx auto 20upx auto;
+	}
+	.uni-input{
+		text-align: center;
+		font-size: 22upx !important;
 	}
 </style>

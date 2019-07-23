@@ -31,8 +31,8 @@
 	export default {
 		data() {
 			return {
-				username: 'cangku',
-				password: '123456'
+				username: '',
+				password: ''
 			}
 		},
 		onLoad() {

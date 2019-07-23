@@ -23,8 +23,8 @@
 						<text style="width: 150upx;">{{item.matcode}}</text>
 						<text style="width: 150upx;">{{item.norms}}</text>
 						<text style="width: 100upx;">{{item.sendnum}}</text>
-						<input class="uni-input" @blur="changeOkNum(item)" v-model="item.oknum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
-						<input class="uni-input" @blur="changeFail(item)" v-model="item.failnum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
+						<input class="uni-input" @blur="changeOkNum(idx)" v-model="item.oknum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
+						<input class="uni-input" @blur="changeFail(idx)" v-model="item.failnum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
 						<!-- <text style="width: 100upx;">{{item.oknum}}</text>
 						<text style="width: 100upx;">{{item.failnum}}</text> -->
 					</view>
@@ -35,7 +35,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="SubmitBt" @click="save">保 存</view>
+		<button class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
 	</view>
 </template>
 
@@ -46,17 +46,20 @@
 	export default {
 		data() {
 			return {
+				ifNoWork: false,
 				Info: '',
 				jlh: '',
 				checkno: '',
 				dateTxt: '',
 				supplier: '',
-				listData: []
+				listData: [],
+				listDataCopy: []
 			}
 		},
 		computed: {
 			...mapState({
-			  urlPre: state => state.urlPre
+			  urlPre: state => state.urlPre,
+			  userInfo: state => state.userInfo
 			})
 		},
 		onLoad: function (option) {
@@ -80,6 +83,7 @@
 						switch (res.data.code) {
 							case 1:
 								this.listData = res.data.checkdelist
+								this.listDataCopy = this.objDeepCopy(res.data.checkdelist)
 								uni.hideLoading()
 								break
 							  default:
@@ -118,20 +122,109 @@
 				})
 			},
 			save () {
-				console.log(this.listData)
-			},
-			changeOkNum (item) {
-				
-			},
-			changeFail (item) {
-				if (item.oknum + item.failnum > item.sendnum) {
-					uni.showToast({
-					    image: '/static/images/attention.png',
-					    title: '合格和不合格数量之和不能大于到货数量!'
-					})
+				if (this.ifNoWork) {
 					return false
 				}
-			}
+				let Data = []
+				let listData = this.listData
+				let ifPass = true
+				for (let i = 0; i < listData.length; i++) {
+					if (Number(listData[i].oknum) + Number(listData[i].failnum) != listData[i].sendnum) {
+						ifPass = false
+						uni.showToast({
+						    image: '/static/images/attention.png',
+						    title: '合格与不合格数量之和必须等于到货数量!'
+						})
+						return false
+					} else{
+						Data.push({
+							jlh: listData[i].jlh,
+							oknum: listData[i].oknum,
+							failnum: listData[i].failnum,
+							chkman: this.userInfo.realname
+						})
+					}
+				}
+				if (ifPass) {
+					this.submit(Data)
+				}
+			},
+			submit (Data) {
+				this.ifNoWork = true
+				uni.showLoading({
+					title: '提交中'
+				})
+				uni.request({
+					url: this.urlPre + '/updateCheckdenum',
+					method: 'POST',
+					data: {
+						checkdelist: Data
+					},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								uni.hideLoading()
+								uni.showToast({
+								    icon: 'success',
+								    title: '检验成功!'
+								})
+								setTimeout(() => {
+									this.getDetail(this.Info.jlh)
+									this.ifNoWork = false
+								}, 1500)
+								break
+							  default:
+								uni.hideLoading()
+								this.ifNoWork = false
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						console.log('request fail', err)
+						// this.listData = []
+						uni.hideLoading()
+						this.ifNoWork = false
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			},
+			changeOkNum (idx) {
+				var item = this.listData[idx]
+				if (item.oknum > item.sendnum) {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '合格数量不能大于到货数量!'
+					})
+					this.listData[idx].oknum = this.listDataCopy[idx].oknum
+					return false
+				}
+			},
+			changeFail (idx) {
+				var item = this.listData[idx]
+				if (item.failnum > item.sendnum) {
+					uni.showToast({
+					    image: '/static/images/attention.png',
+					    title: '不合格数量不能大于到货数量!'
+					})
+					this.listData[idx].failnum = this.listDataCopy[idx].failnum
+					return false
+				}
+			},
+			objDeepCopy (source) {
+				var sourceCopy = source instanceof Array ? [] : {}
+				for (var item in source) {
+					sourceCopy[item] = typeof source[item] === 'object' ? this.objDeepCopy(source[item]) : source[item]
+				}
+				return sourceCopy
+            }
 		}
 	}
 </script>
@@ -139,7 +232,7 @@
 <style>
 	.Detail{
 		width: 100vw;
-		height: 100vh;
+		min-height: 100vh;
 		background: #FFFFFF;
 		display: flex;
 		flex-direction: column;
@@ -155,7 +248,7 @@
 		padding-left: 20upx;
 		text-align: left;
 		float: left;
-		color: #777;
+		color: #333333;
 	}
 	.ListColumn{
 		width: 100%;
@@ -173,7 +266,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		margin-bottom: 70upx;
+		margin-bottom: 80upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -191,7 +284,6 @@
 	.ListItem text{
 		text-align: center;
 		font-size: 22upx;
-		/* color: #777; */
 	}
 	.OperationBt{
 		width: 750upx;
@@ -212,17 +304,18 @@
 	.ListItem input{
 		text-align: center;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
 	}
 	.SubmitBt{
 		width: 100%;
-		height: 60upx;
+		height: 80upx;
 		position: fixed;
 		left: 0;
 		bottom: 0;
+		border-radius: 0;
 		text-align: center;
 		color: #FFFFFF;
-		line-height: 60upx;
+		line-height: 80upx;
 		background: #e64340;
 	}
 </style>

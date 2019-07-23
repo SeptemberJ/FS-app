@@ -6,16 +6,18 @@
 			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
+			<text>状态</text>
 			<text>物料代码</text>
 			<text>代码</text>
 			<text>规格</text>
-			<text>收货数量</text>
+			<text>到货货数量</text>
 			<text>收料数量</text>
 		</view>
 		<view class="ListBlock">
 			<view class="ListMain">
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view class="ListItem" v-for="(item, idx) in listData" :key="idx">
+					<text>{{item.receive_statusTXT}}</text>
 					<text>{{item.matname}}</text>
 					<text>{{item.matcode}}</text>
 					<text>{{item.stuff}}</text>
@@ -24,7 +26,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="SubmitBt" @click="save">保 存</view>
+		<button v-if="fstatus != 1" class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
+		<!-- <button v-if="fstatus == 1" class="SubmitBt" style="background: #387DB3;">收料完成</button> -->
 	</view>
 </template>
 
@@ -35,6 +38,8 @@
 	export default {
 		data() {
 			return {
+				ifNoWork: false,
+				fstatus: '',
 				songhuoId: '',
 				songhuono: '',
 				supplier: '',
@@ -49,6 +54,7 @@
 		},
 		onLoad: function (option) {
 			let Info = JSON.parse(option.Info)
+			this.fstatus = Info.fstatus
 			this.songhuono = Info.songhuono
 			this.supplier = Info.providerfullname
 			this.dateTxt = Info.dateTxt
@@ -66,7 +72,10 @@
 					success: (res) => {
 						switch (res.data.code) {
 							case 1:
-								this.listData = res.data.receiveDetail
+								this.listData = res.data.receiveDetail.map(item => {
+									item.receive_statusTXT = item.receive_status == 0 ? '待收料' : (item.receive_status == 1 ? '收料已审核' : '收料待审核')
+									return item
+								})
 								uni.hideLoading()
 								break
 							  default:
@@ -91,6 +100,9 @@
 				})
 			},
 			save () {
+				if (this.ifNoWork) {
+					return false
+				}
 				let data = []
 				this.listData.map(item => {
 					data.push({
@@ -98,11 +110,18 @@
 						receivenum: item.receivenum
 					})
 				})
+				this.submit(data)
+			},
+			submit (Data) {
+				this.ifNoWork = true
+				uni.showLoading({
+					title: '提交中'
+				})
 				uni.request({
 					url: this.urlPre + '/updateReceivenum',
 					method: 'POST',
 					data: {
-						receivedetaillist: data
+						receivedetaillist: Data
 					},
 					success: (res) => {
 						switch (res.data.code) {
@@ -114,10 +133,12 @@
 								})
 								setTimeout(() => {
 									this.getDetail(this.songhuoId)
+									this.ifNoWork = false
 								}, 1500)
 								break
 							  default:
 								uni.hideLoading()
+								this.ifNoWork = false
 								uni.showToast({
 								    image: '/static/images/attention.png',
 								    title: '服务器繁忙!'
@@ -125,9 +146,10 @@
 						}
 					},
 					fail: (err) => {
-						this.listData = []
 						console.log('request fail', err)
+						// this.listData = []
 						uni.hideLoading()
+						this.ifNoWork = false
 						uni.showModal({
 							content: '接口报错!',
 							showCancel: false
@@ -136,7 +158,6 @@
 					complete: () => {
 					}
 				})
-				console.log(data)
 			}
 		}
 	}
@@ -145,7 +166,7 @@
 <style>
 	.Detail{
 		width: 100vw;
-		height: 100vh;
+		min-height: 100vh;
 		background: #FFFFFF;
 		display: flex;
 		flex-direction: column;
@@ -163,7 +184,7 @@
 		text-align: left;
 		float: left;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
 	}
 	.ListColumn{
 		width: 100%;
@@ -173,7 +194,7 @@
 		align-items: center;
 	}
 	.ListColumn text{
-		width: 20%;
+		width: 16.66%;
 		text-align: center;
 		font-size: 22upx;
 	}
@@ -181,6 +202,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 80upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -197,10 +219,10 @@
 		border-bottom: 1px solid #EEEEEE;
 	}
 	.ListItem text{
-		width: 20%;
+		width: 16.66%;
 		text-align: center;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
 	}
 	.ListItem input{
 		text-align: center;
@@ -208,12 +230,15 @@
 		color: #777;
 	}
 	.SubmitBt{
-		width: 80%;
-		height: 60upx;
+		width: 100%;
+		height: 80upx;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		border-radius: 0;
 		text-align: center;
 		color: #FFFFFF;
-		line-height: 60upx;
+		line-height: 80upx;
 		background: #e64340;
-		margin: 50upx auto 20upx auto;
 	}
 </style>

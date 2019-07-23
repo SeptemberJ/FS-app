@@ -44,7 +44,7 @@
 		{
 			"path": "pages/inspectionManagement/project/index",
 			"style": {
-				"navigationBarTitleText": "项目详情",
+				"navigationBarTitleText": "检验项目管理",
 				"navigationBarBackgroundColor": "#387DB3",
 				"navigationBarTextStyle": "white"
 			}
@@ -52,7 +52,7 @@
 		{
 			"path": "pages/inspectionManagement/serialNumber/index",
 			"style": {
-				"navigationBarTitleText": "序列号详情",
+				"navigationBarTitleText": "序列号管理",
 				"navigationBarBackgroundColor": "#387DB3",
 				"navigationBarTextStyle": "white"
 			}

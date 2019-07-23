@@ -19,7 +19,7 @@
 						</picker>
 					</view>
 					<view class="InputItem" style="width: 10%;">
-						<image class="searchBt" style="" src="../../../static/images/search.png" @click="getList"></image>
+						<image class="searchBt" style="" src="../../../static/images/search.png" @click="search"></image>
 					</view>
 				</view>
 				<view class="ListColumn">
@@ -51,10 +51,10 @@
 					<text>{{item.providername}}</text>
 					<text>{{item.statusTxt}}</text>
 				</view>
-				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 			</view>
+			<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 		</view>
-		<view class="MarginT_20" style="width: 100%;height:60upx;padding: 10upx 0;position: fixed;bottom: 0;left: 0;background: #FFFFFF;border-top: 1px solid #EEEEEE;">
+		<view style="width: 100%;height:60upx;padding: 10upx 0;position: fixed;bottom: 0;left: 0;background: #FFFFFF;border-top: 1px solid #EEEEEE;">
 			<uni-pagination :show-icon="true" title="标题文字" :pageSize="pageSize" :current="curPage" :total="total" @change="changePage"></uni-pagination>	
 		</view>
 	</view>
@@ -100,6 +100,10 @@
 				uni.navigateTo({
 					url: '/pages/inspectionManagement/detail/index?Info=' + JSON.stringify(Info)
 				})
+			},
+			search () {
+				this.curPage = 1
+				this.getList()
 			},
 			getList () {
 				let url = '/serCheckmalist?number=' + this.pageSize + '&page_num=' + this.curPage
@@ -261,7 +265,7 @@
 		top: 120upx;
 		display: flex;
 		flex-direction: column;
-		margin-bottom: 60upx;
+		margin-bottom: 80upx;
 	}
 	.ListMain{
 		width: 100%;
@@ -270,7 +274,7 @@
 	}
 	.ListItem{
 		width: 100%;
-		padding: 24px 0;
+		padding: 10px 0;
 		/* min-height: 60upx; */
 		display: flex;
 		justify-content: space-between;
@@ -282,6 +286,6 @@
 		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
 	}
 </style>

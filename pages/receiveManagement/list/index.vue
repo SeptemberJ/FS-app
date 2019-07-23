@@ -18,7 +18,7 @@
 						</picker>
 					</view>
 					<view class="InputItem" style="width: 10%;">
-						<image class="searchBt" style="" src="../../../static/images/search.png" @click="getList"></image>
+						<image class="searchBt" style="" src="../../../static/images/search.png" @click="search"></image>
 					</view>
 				</view>
 				<view class="ListColumn">
@@ -86,6 +86,10 @@
 				uni.navigateTo({
 					url: '/pages/receiveManagement/detail/index?Info=' + JSON.stringify(Info)
 				})
+			},
+			search () {
+				this.curPage = 1
+				this.getList()
 			},
 			getList () {
 				let url = '/receivelist?number=' + this.pageSize + '&page_num=' + this.curPage
@@ -269,6 +273,7 @@
 		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;
-		color: #777;
+		color: #333333;
+		/* color: #777; */
 	}
 </style>
