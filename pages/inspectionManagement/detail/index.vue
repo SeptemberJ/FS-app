@@ -132,8 +132,8 @@
 					if (Number(listData[i].oknum) + Number(listData[i].failnum) != listData[i].sendnum) {
 						ifPass = false
 						uni.showToast({
-						    image: '/static/images/attention.png',
-						    title: '合格与不合格数量之和必须等于到货数量!'
+						    icon: "none",
+						    title: '合格与不合格数量之和不能大于到货数量!'
 						})
 						return false
 					} else{
@@ -200,7 +200,7 @@
 				var item = this.listData[idx]
 				if (item.oknum > item.sendnum) {
 					uni.showToast({
-					    image: '/static/images/attention.png',
+					    icon: "none",
 					    title: '合格数量不能大于到货数量!'
 					})
 					this.listData[idx].oknum = this.listDataCopy[idx].oknum
@@ -211,7 +211,7 @@
 				var item = this.listData[idx]
 				if (item.failnum > item.sendnum) {
 					uni.showToast({
-					    image: '/static/images/attention.png',
+					    icon: "none",
 					    title: '不合格数量不能大于到货数量!'
 					})
 					this.listData[idx].failnum = this.listDataCopy[idx].failnum

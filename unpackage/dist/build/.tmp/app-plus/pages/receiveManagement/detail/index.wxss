@@ -1,4 +1,13 @@
 
+.ColorRed{
+	color: red !important;
+}
+.ColorBlue{
+	color: blue !important;
+}
+.ColorGreen{
+	color: green !important;
+}
 .Detail{
 	width: 100vw;
 	min-height: 100vh;
@@ -17,8 +26,7 @@
 	width: 100%;
 	padding: 20rpx 0;
 	height: 100rpx;
-	border-bottom: 2px dashed #CCCCCC;
-	/* border-bottom: 1px dotted #EEEEEE; */
+	/* border-bottom: 2px dashed #CCCCCC; */
 }
 .TopInfo text{
 	width: calc(50% - 40rpx);
@@ -31,6 +39,7 @@
 .ListColumn{
 	width: 100%;
 	height: 60rpx;
+	background: #79B2D8;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -90,7 +99,7 @@
 	-webkit-align-items: center;
 	    -ms-flex-align: center;
 	        align-items: center;
-	border-bottom: 1px solid #EEEEEE;
+	border-bottom: 1px dashed #79B2D8;
 }
 .ListItem text{
 	width: 16.66%;

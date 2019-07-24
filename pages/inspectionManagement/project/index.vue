@@ -6,8 +6,8 @@
 			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
-			<text style="width: 98upx;">检验部位</text>
-			<text style="width: 87upx;">技术要求</text>
+			<text style="width: 93upx;">检验部位</text>
+			<text style="width: 92upx;">技术要求</text>
 			<text style="width: 87upx;">1检</text>
 			<text style="width: 87upx;">2检</text>
 			<text style="width: 87upx;">3检</text>
@@ -20,9 +20,14 @@
 			<view class="ListMain">
 				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<textarea style="width: 98upx;padding: 5upx;font-size: 22upx;" v-model="item.parmname" auto-height placeholder="请输入"/>
-						<textarea style="width: 87upx;padding: 5upx;font-size: 22upx;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
-						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
+						<textarea style="width: 93upx;padding: 5upx;font-size: 22upx;text-align: center;" v-model="item.parmname" auto-height placeholder="请输入"/>
+						<textarea style="width: 92upx;padding: 5upx;font-size: 22upx;text-align: center;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="0">{{testArray[item.parmvalue]}}</text>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="1">{{testArray[item.parmvalue1]}}</text>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="2">{{testArray[item.parmvalue2]}}</text>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="3">{{testArray[item.parmvalue3]}}</text>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="4">{{testArray[item.parmvalue4]}}</text>
+						<!-- <picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue]}}</view>
 						</picker>
 						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="1" :value="item.test2" :range="testArray">
@@ -36,8 +41,8 @@
 						</picker>
 						<picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="4" :value="item.test5" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue4]}}</view>
-						</picker>
-						<textarea style="width: 80upx;padding: 5upx;font-size: 22upx;" v-model="item.memo" auto-height placeholder="请输入"/>
+						</picker> -->
+						<textarea style="width: 80upx;padding: 5upx;font-size: 22upx;text-align: center;" v-model="item.memo" auto-height placeholder="请输入"/>
 						<view style="width: 50upx;" @click="deleteLine(idx)">
 							<image style="width: 40upx;height: 40upx;display: block;margin: 5upx auto;" src="../../../static/images/delete.png"></image>
 						</view>
@@ -60,6 +65,7 @@
 	export default {
 		data() {
 			return {
+				ifUpdate: false,
 				ifNoWork: false,
 				Info: '',
 				checkno: '',
@@ -81,9 +87,46 @@
 			this.checkno = Info.checkno
 			this.supplier = Info.supplier
 			this.dateTxt = Info.dateTxt
-			// this.jlh = Info.jlh
+			this.getProjectDetail(Info.jlh)
 		},
 		methods: {
+			getProjectDetail (Jlh) {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: this.urlPre + '/serCheckParmList?djjlh=' + Jlh,
+					data: {},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								this.listData = res.data.checkParmlist
+								if (res.data.checkParmlist.length > 0) {
+									this.ifUpdate = true
+								}
+								uni.hideLoading()
+								break
+							  default:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						this.listData = []
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			},
 			AddLine () {
 				this.listData.push({
 						parmname: '',
@@ -103,10 +146,20 @@
 			deleteLine (idx) {
 				this.listData.splice(idx, 1)
 			},
-			changeTest (e) {
+			changeTest2 (e) {
 				var index = e.currentTarget.dataset.idx
 				var pro = 'parmvalue' + (e.currentTarget.dataset.kind == 0 ? '' : e.currentTarget.dataset.kind)
 				this.listData[index][pro] = e.target.value
+			},
+			changeTest (e) {
+				var index = e.currentTarget.dataset.idx
+				var pro = 'parmvalue' + (e.currentTarget.dataset.kind == 0 ? '' : e.currentTarget.dataset.kind)
+				uni.showActionSheet({
+					itemList: ['合格', '不合格'],
+					success: (e) => {
+						this.listData[index][pro] = e.tapIndex
+					}
+				})
 			},
 			save () {
 				if (this.ifNoWork) {
@@ -115,7 +168,7 @@
 				if (this.listData.map.length == 0) {
 					uni.showToast({
 					    image: '/static/images/attention.png',
-					    title: '请至少添加一行记录!'
+					    title: '请添加记录!'
 					})
 					return false
 				}
@@ -125,13 +178,17 @@
 						ifHasEmpty = true
 						uni.showToast({
 						    image: '/static/images/attention.png',
-						    title: '请将信息填写完整!'
+						    title: '请填写完整!'
 						})
 						return false
 					}
 				})
 				if (!ifHasEmpty) {
-					this.submit(this.listData)
+					if (this.ifUpdate) {
+						this.updateInfo(this.listData)
+					} else {
+						this.submit(this.listData)
+					}
 				}
 			},
 			submit (Data) {
@@ -151,7 +208,7 @@
 								uni.hideLoading()
 								uni.showToast({
 								    icon: 'success',
-								    title: '检验项目新增成功!'
+								    title: '新增成功!'
 								})
 								setTimeout(() => {
 									this.ifNoWork = false
@@ -169,6 +226,54 @@
 					fail: (err) => {
 						console.log('request fail', err)
 						// this.listData = []
+						uni.hideLoading()
+						this.ifNoWork = false
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			},
+			updateInfo (Data) {
+				this.ifNoWork = true
+				uni.showLoading({
+					title: '提交中'
+				})
+				uni.request({
+					url: this.urlPre + '/updateCheckParm',
+					method: 'POST',
+					data: {
+						check: {
+							djjlh: this.Info.jlh,
+							checkdeparmlist: Data
+						}
+					},
+					success: (res) => {
+						switch (res.data.code) {
+							case 0:
+								uni.hideLoading()
+								uni.showToast({
+								    icon: 'success',
+								    title: '修改成功!'
+								})
+								setTimeout(() => {
+									this.ifNoWork = false
+								}, 1500)
+								break
+							  default:
+								uni.hideLoading()
+								this.ifNoWork = false
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						console.log('request fail', err)
 						uni.hideLoading()
 						this.ifNoWork = false
 						uni.showModal({

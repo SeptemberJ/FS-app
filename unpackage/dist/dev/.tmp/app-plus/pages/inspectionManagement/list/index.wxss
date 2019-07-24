@@ -115,7 +115,7 @@
 	-webkit-flex-direction: column;
 	    -ms-flex-direction: column;
 	        flex-direction: column;
-	margin-bottom: 60rpx;
+	margin-bottom: 80rpx;
 }
 .ListMain{
 	width: 100%;
@@ -131,7 +131,7 @@
 }
 .ListItem{
 	width: 100%;
-	padding: 24px 0;
+	padding: 10px 0;
 	/* min-height: 60upx; */
 	display: -webkit-box;
 	display: -webkit-flex;
@@ -152,6 +152,6 @@
 	text-align: center;
 	padding: 0 15rpx;
 	font-size: 22rpx;
-	color: #777;
+	color: #333333;
 }
 

@@ -6,25 +6,28 @@
 			<text style="width: 100%;">物料名称：{{matname}}</text>
 		</view>
 		<view class="ListColumn">
-			<text style="width: 150upx;">物料代码</text>
+			<text style="width: 150upx;">序号</text>
+			<text style="width: 600upx;text-align: left;">序列号</text>
+			<!-- <text style="width: 150upx;">物料代码</text>
 			<text style="width: 150upx;">代码</text>
 			<text style="width: 150upx;">规格</text>
 			<text style="width: 100upx;">到货数量</text>
 			<text style="width: 100upx;">合格</text>
-			<text style="width: 100upx;">不合格</text>
-			<!-- <text class="ColorWhite" style="width: 150upx;">bt1</text> -->
+			<text style="width: 100upx;">不合格</text> -->
 		</view>
 		<view class="ListBlock">
 			<view class="ListMain">
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view v-for="(item, idx) in listData" :key="idx"  style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<text style="width: 150upx;">{{item.matname}}</text>
+						<text style="width: 150upx;">{{idx + 1}}</text>
+						<input class="uni-input" style="width: 600upx;text-align: left;">{{item.xlh}}</input>
+						<!-- <text style="width: 150upx;">{{item.matname}}</text>
 						<text style="width: 150upx;">{{item.matcode}}</text>
 						<text style="width: 150upx;">{{item.norms}}</text>
 						<text style="width: 100upx;">{{item.sendnum}}</text>
 						<input class="uni-input" style="width: 100upx;">{{item.oknum}}</input>
-						<input class="uni-input" style="width: 100upx;">{{item.failnum}}</input>
+						<input class="uni-input" style="width: 100upx;">{{item.failnum}}</input> -->
 					</view>
 				</view>
 			</view>
@@ -73,6 +76,7 @@
 		methods: {
 			AddLine () {
 				this.listData.push({
+						xlh: '',
 						matname: this.Info.matname,
 						matcode: this.Info.matcode,
 						norms: this.Info.norms,

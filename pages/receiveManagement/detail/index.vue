@@ -17,7 +17,7 @@
 			<view class="ListMain">
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view class="ListItem" v-for="(item, idx) in listData" :key="idx">
-					<text>{{item.receive_statusTXT}}</text>
+					<text :class="{'ColorRed': item.receive_status == 1, 'ColorBlue': item.receive_status == 2, 'ColorGreen': item.receive_status == 0}">{{item.receive_statusTXT}}</text>
 					<text>{{item.matname}}</text>
 					<text>{{item.matcode}}</text>
 					<text>{{item.stuff}}</text>
@@ -26,8 +26,8 @@
 				</view>
 			</view>
 		</view>
-		<button v-if="fstatus != 1" class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
-		<!-- <button v-if="fstatus == 1" class="SubmitBt" style="background: #387DB3;">收料完成</button> -->
+		<button v-if="fstatus != 2" class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
+		<!-- <button v-if="fstatus == 2" class="SubmitBt" style="background: #387DB3;">收料完成</button> -->
 	</view>
 </template>
 
@@ -164,6 +164,15 @@
 </script>
 
 <style>
+	.ColorRed{
+		color: red !important;
+	}
+	.ColorBlue{
+		color: blue !important;
+	}
+	.ColorGreen{
+		color: green !important;
+	}
 	.Detail{
 		width: 100vw;
 		min-height: 100vh;
@@ -175,8 +184,7 @@
 		width: 100%;
 		padding: 20upx 0;
 		height: 100upx;
-		border-bottom: 2px dashed #CCCCCC;
-		/* border-bottom: 1px dotted #EEEEEE; */
+		/* border-bottom: 2px dashed #CCCCCC; */
 	}
 	.TopInfo text{
 		width: calc(50% - 40upx);
@@ -189,6 +197,7 @@
 	.ListColumn{
 		width: 100%;
 		height: 60upx;
+		background: #79B2D8;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -216,7 +225,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid #EEEEEE;
+		border-bottom: 1px dashed #79B2D8;
 	}
 	.ListItem text{
 		width: 16.66%;

@@ -1,7 +1,16 @@
 
+.ColorRed{
+	color: red !important;
+}
+.ColorBlue{
+	color: blue !important;
+}
+.ColorGreen{
+	color: green !important;
+}
 .Detail{
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 	background: #FFFFFF;
 	display: -webkit-box;
 	display: -webkit-flex;
@@ -17,8 +26,7 @@
 	width: 100%;
 	padding: 20rpx 0;
 	height: 100rpx;
-	border-bottom: 2px dashed #CCCCCC;
-	/* border-bottom: 1px dotted #EEEEEE; */
+	/* border-bottom: 2px dashed #CCCCCC; */
 }
 .TopInfo text{
 	width: calc(50% - 40rpx);
@@ -26,11 +34,12 @@
 	text-align: left;
 	float: left;
 	font-size: 22rpx;
-	color: #777;
+	color: #333333;
 }
 .ListColumn{
 	width: 100%;
 	height: 60rpx;
+	background: #79B2D8;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -45,7 +54,7 @@
 	        align-items: center;
 }
 .ListColumn text{
-	width: 20%;
+	width: 16.66%;
 	text-align: center;
 	font-size: 22rpx;
 }
@@ -60,6 +69,7 @@
 	-webkit-flex-direction: column;
 	    -ms-flex-direction: column;
 	        flex-direction: column;
+	margin-bottom: 80rpx;
 }
 .ListMain{
 	width: 100%;
@@ -89,13 +99,13 @@
 	-webkit-align-items: center;
 	    -ms-flex-align: center;
 	        align-items: center;
-	border-bottom: 1px solid #EEEEEE;
+	border-bottom: 1px dashed #79B2D8;
 }
 .ListItem text{
-	width: 20%;
+	width: 16.66%;
 	text-align: center;
 	font-size: 22rpx;
-	color: #777;
+	color: #333333;
 }
 .ListItem input{
 	text-align: center;
@@ -103,12 +113,15 @@
 	color: #777;
 }
 .SubmitBt{
-	width: 80%;
-	height: 60rpx;
+	width: 100%;
+	height: 80rpx;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	border-radius: 0;
 	text-align: center;
 	color: #FFFFFF;
-	line-height: 60rpx;
+	line-height: 80rpx;
 	background: #e64340;
-	margin: 50rpx auto 20rpx auto;
 }
 

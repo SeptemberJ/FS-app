@@ -40,8 +40,8 @@
 	        align-items: center;
 }
 .Logo{
-	width: 100rpx;
-	height: 100rpx;
+	width: 542rpx;
+	height: 138rpx;
 	margin-bottom: 50rpx;
 }
 .InputGroup{

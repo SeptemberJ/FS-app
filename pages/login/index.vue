@@ -2,7 +2,7 @@
 	<view class="LoginWrap">
 		<view class="Login">
 			<!-- Logo -->
-			<image class="Logo" style="" src="../../static/images/logo.png"></image>
+			<image class="Logo" style="" src="../../static/images/logo.jpg"></image>
 			<!-- 信息输入 -->
 			<view class="InputGroup">
 				<view class="uni-form-item uni-row InputBarBlock">
@@ -132,8 +132,8 @@
 		align-items: center;
 	}
 	.Logo{
-		width: 100upx;
-		height: 100upx;
+		width: 542upx;
+		height: 138upx;
 		margin-bottom: 50upx;
 	}
 	.InputGroup{

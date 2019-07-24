@@ -1,7 +1,7 @@
 
 .Detail{
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 	background: #FFFFFF;
 	display: -webkit-box;
 	display: -webkit-flex;
@@ -24,7 +24,7 @@
 	padding-left: 20rpx;
 	text-align: left;
 	float: left;
-	color: #777;
+	color: #333333;
 }
 .ListColumn{
 	width: 100%;
@@ -58,7 +58,7 @@
 	-webkit-flex-direction: column;
 	    -ms-flex-direction: column;
 	        flex-direction: column;
-	margin-bottom: 70rpx;
+	margin-bottom: 80rpx;
 }
 .ListMain{
 	width: 100%;
@@ -92,7 +92,6 @@
 .ListItem text{
 	text-align: center;
 	font-size: 22rpx;
-	/* color: #777; */
 }
 .OperationBt{
 	width: 750rpx;
@@ -122,17 +121,18 @@
 .ListItem input{
 	text-align: center;
 	font-size: 22rpx;
-	color: #777;
+	color: #333333;
 }
 .SubmitBt{
 	width: 100%;
-	height: 60rpx;
+	height: 80rpx;
 	position: fixed;
 	left: 0;
 	bottom: 0;
+	border-radius: 0;
 	text-align: center;
 	color: #FFFFFF;
-	line-height: 60rpx;
+	line-height: 80rpx;
 	background: #e64340;
 }
 
