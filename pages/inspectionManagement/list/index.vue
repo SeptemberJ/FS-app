@@ -23,10 +23,10 @@
 					</view>
 				</view>
 				<view class="ListColumn">
-					<text>检验单号</text>
-					<text>检验日期</text>
-					<text>供应商</text>
-					<text>检验状态</text>
+					<text style="width: 20%;">检验单号</text>
+					<text style="width: 17%;">检验日期</text>
+					<text style="width: 20%;">供应商</text>
+					<text style="width: 23%;">检验状态</text>
 				</view>
 			</view>
 			<!-- <view class="TopSearchBar">
@@ -46,10 +46,10 @@
 		<view class="ListBlock">
 			<view class="ListMain">
 				<view class="ListItem" v-for="(item, idx) in listData" :key="idx" @click="GoDetail(item)">
-					<text>{{item.checkno}}</text>
-					<text>{{item.dateTxt}}</text>
-					<text>{{item.providername}}</text>
-					<text>{{item.statusTxt}}</text>
+					<text style="width: 20%;">{{item.checkno}}</text>
+					<text style="width: 17%;">{{item.dateTxt}}</text>
+					<text style="width: 20%;">{{item.providername}}</text>
+					<text style="width: 23%;">{{item.fstatus}}</text>
 				</view>
 			</view>
 			<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
@@ -73,12 +73,12 @@
 			return {
 				checkno: '',
 				supplier: '',
-				status: 3,
+				status: 0,
 				curPage: 1,
 				pageSize: 10,
 				total: 0,
 				listData: [],
-				statusArray: ['待收料', '部分已审', '全部已审', '全部']
+				statusArray: ['全部']
 			}
 		},
 		computed: {
@@ -91,6 +91,7 @@
 		},
 		onShow: function() {
 			this.getList()
+			this.getStatus()
 		},
 		methods: {
 			changeStatus (e) {
@@ -105,6 +106,22 @@
 				this.curPage = 1
 				this.getList()
 			},
+			getStatus () {
+				uni.request({
+					url: this.urlPre + '/serStatusList',
+					data: {},
+					success: (res) => {
+						this.statusArray = ['全部']
+						res.data.statuslist.map(item => {
+							this.statusArray.push(item.jlzt)
+						})
+					},
+					fail: (err) => {
+					},
+					complete: () => {
+					}
+				})
+			},
 			getList () {
 				let url = '/serCheckmalist?number=' + this.pageSize + '&page_num=' + this.curPage
 				uni.showLoading({
@@ -116,8 +133,8 @@
 				if (this.supplier) {
 					url = url + '&providername=' + this.supplier
 				}
-				if (this.status != 3) {
-					url = url + '&fstatus=' + this.status
+				if (this.status != 0) {
+					url = url + '&fstatus=' + this.statusArray[this.status]
 				}
 				uni.request({
 					url: this.urlPre + url,
@@ -126,7 +143,7 @@
 						switch (res.data.code) {
 							case 1:
 								this.listData = res.data.checkmalist.map(item => {
-									item.statusTxt = item.fstatus == 0 ? '待收料' : (item.fstatus == 1 ? '部分已审' : (item.fstatus == 2 ? '全部已审' : '其它'))
+									// item.statusTxt = item.fstatus == 0 ? '待收料' : (item.fstatus == 1 ? '部分已审' : (item.fstatus == 2 ? '全部已审' : '其它'))
 									item.dateTxt = this.formatToString(item.sheetdate.time, 'Simple', '-')
 									return item
 								})
@@ -253,7 +270,6 @@
 		border-bottom: 1px dashed #ccc;
 	}
 	.ListColumn text{
-		width: 20%;
 		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;
@@ -282,7 +298,6 @@
 		border-bottom: 1px solid #EEEEEE;
 	}
 	.ListItem text{
-		width: 20%;
 		text-align: center;
 		padding: 0 15upx;
 		font-size: 22upx;

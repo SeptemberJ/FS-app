@@ -22,11 +22,19 @@
 					<view class="ListItem">
 						<textarea style="width: 93upx;padding: 5upx;font-size: 22upx;text-align: center;" v-model="item.parmname" auto-height placeholder="请输入"/>
 						<textarea style="width: 92upx;padding: 5upx;font-size: 22upx;text-align: center;" v-model="item.parmvalueref" auto-height placeholder="请输入"/>
-						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="0">{{testArray[item.parmvalue]}}</text>
+						<input style="width: 87upx;" v-model="item.parmvalue" :data-idx="idx" :data-kind="0" placeholder="请输入"/>
+						<input style="width: 87upx;" v-model="item.parmvalue1" :data-idx="idx" :data-kind="1" placeholder="请输入"/>
+						<input style="width: 87upx;" v-model="item.parmvalue2" :data-idx="idx" :data-kind="2" placeholder="请输入"/>
+						<input style="width: 87upx;" v-model="item.parmvalue3" :data-idx="idx" :data-kind="3" placeholder="请输入"/>
+						<input style="width: 87upx;" v-model="item.parmvalue4" :data-idx="idx" :data-kind="4" placeholder="请输入"/>
+						
+						<!-- <text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="0">{{testArray[item.parmvalue]}}</text>
 						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="1">{{testArray[item.parmvalue1]}}</text>
 						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="2">{{testArray[item.parmvalue2]}}</text>
 						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="3">{{testArray[item.parmvalue3]}}</text>
-						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="4">{{testArray[item.parmvalue4]}}</text>
+						<text style="width: 87upx;" @click="changeTest" :data-idx="idx" :data-kind="4">{{testArray[item.parmvalue4]}}</text> -->
+						
+						
 						<!-- <picker style="width: 87upx;" @change="changeTest" :data-idx="idx" :data-kind="0" :value="item.test1" :range="testArray">
 							<view class="uni-input">{{testArray[item.parmvalue]}}</view>
 						</picker>
@@ -51,7 +59,7 @@
 				<!-- <text class="EmptyData" v-if="listData.length == 0">暂无数据</text> -->
 			</view>
 		</view>
-		<view class="AddLine">
+		<view class="AddLine" v-if="ifShowAdd">
 			<image @click="AddLine" style="width: 40upx;height: 40upx;display: block;margin: 10upx auto;" src="../../../static/images/add.png"></image>
 		</view>
 		<button class="SubmitBt" :disabled="ifNoWork"  @click="save">保 存</button>
@@ -67,6 +75,7 @@
 			return {
 				ifUpdate: false,
 				ifNoWork: false,
+				ifShowAdd: true,
 				Info: '',
 				checkno: '',
 				dateTxt: '',
@@ -83,11 +92,20 @@
 		},
 		onLoad: function (option) {
 			let Info = JSON.parse(option.Info)
+			console.log('Info.parmcount--', Info.parmcount > 0)
 			this.Info = Info
 			this.checkno = Info.checkno
 			this.supplier = Info.supplier
 			this.dateTxt = Info.dateTxt
-			this.getProjectDetail(Info.jlh)
+			if (Info.parmcount > 0) {
+				// 修改查看
+				this.ifUpdate = true
+				this.getProjectDetail(Info.jlh)
+			} else {
+				//  新增
+				this.ifUpdate = false
+				this.getProjectDefault(Info.matjlh)
+			}
 		},
 		methods: {
 			getProjectDetail (Jlh) {
@@ -101,9 +119,61 @@
 						switch (res.data.code) {
 							case 1:
 								this.listData = res.data.checkParmlist
-								if (res.data.checkParmlist.length > 0) {
-									this.ifUpdate = true
+								// if (res.data.checkParmlist.length > 0) {
+								// 	this.ifUpdate = true
+								// }
+								uni.hideLoading()
+								break
+							  default:
+								uni.hideLoading()
+								uni.showToast({
+								    image: '/static/images/attention.png',
+								    title: '服务器繁忙!'
+								})
+						}
+					},
+					fail: (err) => {
+						this.listData = []
+						console.log('request fail', err)
+						uni.hideLoading()
+						uni.showModal({
+							content: '接口报错!',
+							showCancel: false
+						});
+					},
+					complete: () => {
+					}
+				})
+			},
+			getProjectDefault (Matjlh) {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: this.urlPre + '/serCheckParms?matjlh=' + Matjlh,
+					data: {},
+					success: (res) => {
+						switch (res.data.code) {
+							case 1:
+								if (res.data.checkParmlist.length == 0) {
+									this.ifShowAdd = false
 								}
+								this.listData = res.data.checkParmlist.map(item => {
+									item.parmname = item.checkname
+									item.djjlh = this.Info.jlh
+									item.matjlh = this.Info.matjlh
+									item.djjlh1 = this.Info.matjlh
+									item.parmvalueref = item.checkvalue
+									item.parmvalue = ''
+									item.parmvalue1 = ''
+									item.parmvalue2 = ''
+									item.parmvalue3 = ''
+									item.parmvalue4 = ''
+									item.checkor = this.userInfo.realname
+									item.memo = ''
+									return item
+								})
+								
 								uni.hideLoading()
 								break
 							  default:
@@ -134,11 +204,11 @@
 						matjlh: this.Info.matjlh,
 						djjlh1: this.Info.matjlh,
 						parmvalueref: '',
-						parmvalue: 2,
-						parmvalue1: 2,
-						parmvalue2: 2,
-						parmvalue3: 2,
-						parmvalue4: 2,
+						parmvalue: '',
+						parmvalue1: '',
+						parmvalue2: '',
+						parmvalue3: '',
+						parmvalue4: '',
 						checkor: this.userInfo.realname,
 						memo: ''
 					})
@@ -165,31 +235,37 @@
 				if (this.ifNoWork) {
 					return false
 				}
-				if (this.listData.map.length == 0) {
+				if (this.listData.length == 0) {
 					uni.showToast({
 					    image: '/static/images/attention.png',
 					    title: '请添加记录!'
 					})
 					return false
 				}
-				let ifHasEmpty = false
-				this.listData.map(item => {
-					if (item.parmname == '' || item.parmvalueref == '' || item.parmvalue == 2 || item.parmvalue1 == 2 || item.parmvalue2 == 2 || item.parmvalue3 == 2 || item.parmvalue4 == 2) {
-						ifHasEmpty = true
-						uni.showToast({
-						    image: '/static/images/attention.png',
-						    title: '请填写完整!'
-						})
-						return false
-					}
-				})
-				if (!ifHasEmpty) {
-					if (this.ifUpdate) {
-						this.updateInfo(this.listData)
-					} else {
-						this.submit(this.listData)
-					}
+				if (this.ifUpdate) {
+					this.updateInfo(this.listData)
+				} else {
+					this.submit(this.listData)
 				}
+				// 为空判断
+				// let ifHasEmpty = false
+				// this.listData.map(item => {
+				// 	if (item.parmname == '' || item.parmvalueref == '' || item.parmvalue == 2 || item.parmvalue1 == 2 || item.parmvalue2 == 2 || item.parmvalue3 == 2 || item.parmvalue4 == 2) {
+				// 		ifHasEmpty = true
+				// 		uni.showToast({
+				// 		    image: '/static/images/attention.png',
+				// 		    title: '请填写完整!'
+				// 		})
+				// 		return false
+				// 	}
+				// })
+				// if (!ifHasEmpty) {
+				// 	if (this.ifUpdate) {
+				// 		this.updateInfo(this.listData)
+				// 	} else {
+				// 		this.submit(this.listData)
+				// 	}
+				// }
 			},
 			submit (Data) {
 				this.ifNoWork = true

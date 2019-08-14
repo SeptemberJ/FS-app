@@ -105,9 +105,9 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "xxhdpi" : "C:/Users/liubai/Desktop/复盛app/10801882.png",
-                    "hdpi" : "C:/Users/liubai/Desktop/复盛app/480762.png",
-                    "xhdpi" : "C:/Users/liubai/Desktop/复盛app/7201242.png"
+                    "xxhdpi" : "C:/Users/liubai/Desktop/ProjectFiles/复盛app/10801882.png",
+                    "hdpi" : "C:/Users/liubai/Desktop/ProjectFiles/复盛app/480762.png",
+                    "xhdpi" : "C:/Users/liubai/Desktop/ProjectFiles/复盛app/7201242.png"
                 }
             }
         }

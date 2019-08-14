@@ -3,7 +3,7 @@
 		<view class="TopInfo">
 			<text>送货单号：{{songhuono}}</text>
 			<text style="text-align: right;padding-right: 20upx;">送货日期：{{dateTxt}}</text>
-			<text>供应商：{{supplier}}</text>
+			<text style="width: calc(100% - 40upx);">供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
 			<text>状态</text>
@@ -73,6 +73,7 @@
 						switch (res.data.code) {
 							case 1:
 								this.listData = res.data.receiveDetail.map(item => {
+									item.receivenum = item.receivenum == 0 ? item.shnum : item.receivenum
 									item.receive_statusTXT = item.receive_status == 0 ? '待收料' : (item.receive_status == 1 ? '收料已审核' : '收料待审核')
 									return item
 								})

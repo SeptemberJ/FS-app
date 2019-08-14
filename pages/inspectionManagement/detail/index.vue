@@ -6,12 +6,13 @@
 			<text>供应商：{{supplier}}</text>
 		</view>
 		<view class="ListColumn">
-			<text style="width: 150upx;">物料代码</text>
-			<text style="width: 150upx;">代码</text>
-			<text style="width: 150upx;">型号</text>
-			<text style="width: 100upx;">到货数量</text>
-			<text style="width: 100upx;">合格</text>
-			<text style="width: 100upx;">不合格</text>
+			<text style="width: 120upx;">检验方式</text>
+			<text style="width: 120upx;">物料代码</text>
+			<text style="width: 120upx;">代码</text>
+			<text style="width: 120upx;">型号</text>
+			<text style="width: 110upx;">到货数量</text>
+			<text style="width: 80upx;">合格</text>
+			<text style="width: 80upx;">不合格</text>
 			<!-- <text class="ColorWhite" style="width: 150upx;">bt1</text> -->
 		</view>
 		<view class="ListBlock">
@@ -19,12 +20,13 @@
 				<text class="EmptyData" v-if="listData.length == 0">暂无数据</text>
 				<view v-for="(item, idx) in listData" :key="idx" style="background: aliceblue;margin-bottom: 0upx;">
 					<view class="ListItem">
-						<text style="width: 150upx;">{{item.matname}}</text>
-						<text style="width: 150upx;">{{item.matcode}}</text>
-						<text style="width: 150upx;">{{item.norms}}</text>
-						<text style="width: 100upx;">{{item.sendnum}}</text>
-						<input class="uni-input" @blur="changeOkNum(idx)" v-model="item.oknum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
-						<input class="uni-input" @blur="changeFail(idx)" v-model="item.failnum" style="width: 100upx;border-bottom: 0px solid #EEEEEE;"/>
+						<text style="width: 120upx;">{{item.checkmode}}</text>
+						<text style="width: 120upx;">{{item.matname}}</text>
+						<text style="width: 120upx;">{{item.matcode}}</text>
+						<text style="width: 120upx;">{{item.norms}}</text>
+						<text style="width: 110upx;">{{item.sendnum}}</text>
+						<input class="uni-input" @blur="changeOkNum(idx)" v-model="item.oknum" style="width: 80upx;border-bottom: 0px solid #EEEEEE;"/>
+						<input class="uni-input" @blur="changeFail(idx)" v-model="item.failnum" style="width: 80upx;border-bottom: 0px solid #EEEEEE;"/>
 						<!-- <text style="width: 100upx;">{{item.oknum}}</text>
 						<text style="width: 100upx;">{{item.failnum}}</text> -->
 					</view>

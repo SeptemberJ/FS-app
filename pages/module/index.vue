@@ -1,12 +1,14 @@
 <template>
 	<view class="Module">
 		<view class="ModuleWarp">
+			<!-- userInfo.roleid = 402881e96c7f6b2d016c7f8ccc770003 -->
 			<view class="ModuleItem" style="background: #9BE3A2;" @click="GoMuduleR">
 				<view class="IconWrap">
 					<image src="../../static/images/cangku.png" class="inputIcon"></image>
 				</view>
 				<text>收料管理</text>
 			</view>
+			<!-- userInfo.roleid = 402881e96c7f6b2d016c7f8c967a0001 -->
 			<view class="ModuleItem"  style="background: #FFB47C;" @click="GoMuduleI">
 				<view class="IconWrap">
 					<image src="../../static/images/checklist.png" class="inputIcon"></image>

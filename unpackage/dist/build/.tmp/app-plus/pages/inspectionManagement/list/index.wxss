@@ -96,7 +96,6 @@
 	border-bottom: 1px dashed #ccc;
 }
 .ListColumn text{
-	width: 20%;
 	text-align: center;
 	padding: 0 15rpx;
 	font-size: 22rpx;
@@ -148,7 +147,6 @@
 	border-bottom: 1px solid #EEEEEE;
 }
 .ListItem text{
-	width: 20%;
 	text-align: center;
 	padding: 0 15rpx;
 	font-size: 22rpx;
